@@ -1,190 +1,382 @@
-import { useState } from 'react';
-import './app.css';
+import { useState } from 'react'
+import './app.css'
 
 export default function App() {
-  const [url, setUrl] = useState('');
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState(null);
-  const [copyFeedback, setCopyFeedback] = useState(false);
 
-  const isValidUrl = (string) => {
-    try {
-      new URL(string);
-      return true;
-    } catch (_) {
-      return false;
-    }
-  };
-
-  const handleShorten = () => {
-    const trimmedUrl = url.trim();
-
-    if (!trimmedUrl) return;
-
-    if (!isValidUrl(trimmedUrl) && !trimmedUrl.startsWith('http://') && !trimmedUrl.startsWith('https://')) {
-      setError(true);
-      return;
-    }
-
-    setError(false);
-    setLoading(true);
-
-    // Simula delay do servidor
-    setTimeout(() => {
-      setResult({
-        shortened: 'lynx.sh/xK92',
-        original: trimmedUrl,
-      });
-      setLoading(false);
-    }, 600);
-  };
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(`lynx.sh/${result.shortened.split('/')[1]}`);
-    setCopyFeedback(true);
-    setTimeout(() => setCopyFeedback(false), 2000);
-  };
-
-  const handleReset = () => {
-    setResult(null);
-    setUrl('');
-    setError(false);
-  };
-
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      handleShorten();
-    }
-  };
+  const [ url, setUrl ] = useState('')
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center px-4 md:px-12 bg-background dark:bg-background text-on-background antialiased selection:bg-primary-container selection:text-background relative overflow-hidden">
-      {/* Ambient glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary-container rounded-full opacity-[0.03] blur-[120px] pointer-events-none z-0"></div>
 
-      <main className="w-full max-w-[640px] z-10 flex flex-col items-center">
-        {/* Logo */}
-        <div className="mb-6 flex items-center gap-2">
-          <span className="material-symbols-outlined text-primary-container text-[32px]" style={{ fontVariationSettings: "'FILL' 1" }}>link</span>
-          <span className="font-headline-lg text-headline-lg font-bold tracking-tight">Lynx</span>
-        </div>
+    <>
 
-        {/* Header */}
-        <div className="text-center mb-12 space-y-4">
-          <h1 className="font-display-lg text-display-lg font-bold text-on-surface">Encurte seus links.</h1>
-          <p className="font-body-lg text-body-lg text-on-surface-variant max-w-[480px] mx-auto">
-            Simples, rápido e direto ao ponto.
-          </p>
-        </div>
+      <main className="shortener-page">
+        <div className="ambient ambient-one" />
+        <div className="ambient ambient-two" />
 
-        {/* Main Interaction Area */}
-        <div className="w-full space-y-6">
-          {!result ? (
-            <>
-              {/* Input */}
-              <div className={`glass-card rounded-xl p-2 transition-all duration-300 hover:border-[#333333] input-focus-ring flex flex-col sm:flex-row gap-2 relative ${error ? 'border-error' : ''}`}>
-                <div className="flex-1 flex items-center px-4 gap-3 bg-[#121212] rounded-lg">
-                  <span className="material-symbols-outlined text-on-surface-variant">link</span>
-                  <input
-                    autoComplete="off"
-                    className="w-full bg-transparent border-none text-on-surface font-body-md text-body-md placeholder:text-on-surface-variant focus:ring-0 p-0 h-12"
-                    placeholder="Cole seu longo link aqui..."
-                    spellCheck="false"
-                    type="url"
-                    value={url}
-                    onChange={(e) => {
-                      setUrl(e.target.value);
-                      if (error) setError(false);
-                    }}
-                    onKeyPress={handleKeyPress}
+        <nav className="navbar">
+          <a href="#" className="brand">
+            <span className="brand-mark">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M8.5 15.5 15.5 8.5M7 12l-2 2a4 4 0 0 0 5.66 5.66l2-2M17 12l2-2a4 4 0 0 0-5.66-5.66l-2 2"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </span>
+            <span>link<span className="brand-accent">ly</span></span>
+          </a>
+
+          <div className="nav-links">
+            <a href="#features">Recursos</a>
+            <a href="#analytics">Analytics</a>
+            <a href="#pricing">Preços</a>
+          </div>
+
+          <div className="nav-actions">
+            <a href="#" className="login-link">Entrar</a>
+            <a href="#" className="nav-button">Criar conta</a>
+          </div>
+        </nav>
+
+        <section className="hero">
+          <div className="hero-content">
+            <div className="eyebrow">
+              <span className="status-dot" />
+              <span>Encurte. Compartilhe. Converta.</span>
+            </div>
+
+            <h1>
+              Links menores.
+              <br />
+              <span>Impacto maior.</span>
+            </h1>
+
+            <p className="hero-description">
+              Transforme URLs longas em links curtos, elegantes e fáceis de
+              compartilhar. Tudo em um só lugar.
+            </p>
+
+            <div className="url-card">
+              <div className="url-input-wrapper">
+                <svg
+                  className="input-icon"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.7"
+                    strokeLinecap="round"
                   />
+                  <path
+                    d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.7"
+                    strokeLinecap="round"
+                  />
+                </svg>
+
+                <input
+                  type="url"
+                  placeholder="Cole sua URL aqui..."
+                  aria-label="URL para encurtar"
+                  onChange={(e) => setUrl(e.target.value)}
+                />
+              </div>
+
+              <button className="shorten-button">
+                Encurtar
+                <span className="button-arrow">↗</span>
+              </button>
+            </div>
+
+            <div className="trust-row">
+              <div className="avatars">
+                <span className="avatar avatar-1">M</span>
+                <span className="avatar avatar-2">A</span>
+                <span className="avatar avatar-3">R</span>
+                <span className="avatar avatar-4">+</span>
+              </div>
+
+              <span>
+                Usado por <strong>12.000+</strong> criadores e empresas
+              </span>
+            </div>
+          </div>
+
+          <div className="hero-visual">
+            <div className="visual-orbit orbit-one" />
+            <div className="visual-orbit orbit-two" />
+
+            <div className="floating-card card-main">
+              <div className="card-top">
+                <div className="mini-icon">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                      d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.7"
+                      strokeLinecap="round"
+                    />
+                    <path
+                      d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.7"
+                      strokeLinecap="round"
+                    />
+                  </svg>
                 </div>
-                <button
-                  onClick={handleShorten}
-                  disabled={loading}
-                  className="bg-primary-container text-background font-label-md text-label-md font-bold px-8 py-3 rounded-lg hover:bg-primary-fixed transition-colors flex items-center justify-center gap-2 whitespace-nowrap sm:h-12 h-14 w-full sm:w-auto disabled:opacity-70"
-                >
-                  {loading ? (
-                    <span className="material-symbols-outlined text-[20px] animate-spin">progress_activity</span>
-                  ) : (
-                    <>
-                      <span>Encurtar link</span>
-                      <span className="material-symbols-outlined text-[20px]">arrow_forward</span>
-                    </>
-                  )}
+
+                <span className="live-badge">
+                  <i /> Ativo
+                </span>
+              </div>
+
+              <div className="generated-url">
+                <span className="url-domain">lnk.ly/</span>
+                <strong>v7k2p</strong>
+                <button className="copy-button" aria-label="Copiar link">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect
+                      x="9"
+                      y="9"
+                      width="10"
+                      height="10"
+                      rx="2"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.6"
+                    />
+                    <path
+                      d="M15 9V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.6"
+                    />
+                  </svg>
                 </button>
               </div>
 
-              {/* Error */}
-              {error && (
-                <div className="flex items-center gap-2 text-error font-label-sm text-label-sm px-4">
-                  <span className="material-symbols-outlined text-[16px]">error</span>
-                  <span>Por favor, insira uma URL válida. (ex: https://exemplo.com)</span>
-                </div>
-              )}
-            </>
-          ) : (
-            /* Result Card */
-            <div className="glass-card rounded-xl p-6 transition-all duration-300 opacity-100 translate-y-0 flex flex-col gap-4 relative overflow-hidden animate-in">
-              <div className="absolute top-0 left-0 w-full h-1 bg-primary-container"></div>
-              
-              <div className="flex justify-between items-start">
+              <div className="original-url">
+                exemplo.com/campanha/verao-2027
+              </div>
+
+              <div className="card-divider" />
+
+              <div className="card-stats">
                 <div>
-                  <p className="font-label-sm text-label-sm text-on-surface-variant mb-1 uppercase tracking-wider">
-                    Seu link encurtado
-                  </p>
-                  <a
-                    href="#"
-                    onClick={(e) => e.preventDefault()}
-                    className="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary-container hover:underline decoration-primary-container/30 underline-offset-4 transition-all"
-                  >
-                    {result.shortened}
-                  </a>
-                  <p className="font-label-sm text-label-sm text-on-surface-variant mt-2 truncate max-w-[280px] sm:max-w-[400px] opacity-70">
-                    Origem: {result.original}
-                  </p>
+                  <span>Cliques</span>
+                  <strong>2.847</strong>
                 </div>
-                <button aria-label="QR Code" className="w-10 h-10 rounded-lg bg-surface-container-high border border-outline-variant text-on-surface hover:border-on-surface transition-colors flex items-center justify-center">
-                  <span className="material-symbols-outlined">qr_code_2</span>
-                </button>
+
+                <div>
+                  <span>CTR</span>
+                  <strong>18,4%</strong>
+                </div>
+
+                <div className="trend">
+                  <span>7 dias</span>
+                  <strong>+24,8%</strong>
+                </div>
               </div>
 
-              <div className="mt-2 pt-4 border-t border-outline-variant/30 flex justify-end gap-3">
-                <button
-                  onClick={handleReset}
-                  className="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors px-4 py-2"
+              <div className="mini-chart">
+                <div className="chart-grid">
+                  <span />
+                  <span />
+                  <span />
+                </div>
+
+                <svg
+                  viewBox="0 0 400 100"
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
                 >
-                  Encurtar outro
-                </button>
-                <button
-                  onClick={handleCopy}
-                  className={`bg-surface-container-high border text-on-surface font-label-md text-label-md px-6 py-2 rounded-lg hover:border-primary-container hover:text-primary-container transition-colors flex items-center gap-2 ${
-                    copyFeedback ? 'border-primary-container text-primary-container success-flash' : 'border-outline-variant'
-                  }`}
-                >
-                  <span className="material-symbols-outlined text-[18px]">
-                    {copyFeedback ? 'check' : 'content_copy'}
-                  </span>
-                  <span>{copyFeedback ? 'Copiado!' : 'Copiar'}</span>
-                </button>
+                  <defs>
+                    <linearGradient
+                      id="chartGradient"
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1"
+                    >
+                      <stop
+                        offset="0%"
+                        stopColor="#b8ff4d"
+                        stopOpacity=".25"
+                      />
+                      <stop
+                        offset="100%"
+                        stopColor="#b8ff4d"
+                        stopOpacity="0"
+                      />
+                    </linearGradient>
+                  </defs>
+
+                  <path
+                    d="M0 82 C35 75 42 80 68 68 S105 72 130 55 S160 62 188 48 S218 52 244 40 S275 46 298 30 S330 38 355 19 S380 26 400 8 V100 H0 Z"
+                    fill="url(#chartGradient)"
+                  />
+
+                  <path
+                    d="M0 82 C35 75 42 80 68 68 S105 72 130 55 S160 62 188 48 S218 52 244 40 S275 46 298 30 S330 38 355 19 S380 26 400 8"
+                    fill="none"
+                    stroke="#b8ff4d"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                  />
+                </svg>
               </div>
             </div>
-          )}
-        </div>
+
+            <div className="floating-card card-small card-clicks">
+              <span className="small-label">Cliques hoje</span>
+              <strong>+384</strong>
+              <span className="positive">↑ 12,6%</span>
+            </div>
+
+            <div className="floating-card card-small card-location">
+              <div className="location-icon">◉</div>
+              <div>
+                <span className="small-label">Top localização</span>
+                <strong>São Paulo, BR</strong>
+              </div>
+            </div>
+
+            <div className="spark-dot dot-one" />
+            <div className="spark-dot dot-two" />
+            <div className="spark-dot dot-three" />
+          </div>
+        </section>
+
+        <section className="stats-section">
+          <div className="stat-item">
+            <strong>1.2M+</strong>
+            <span>links encurtados</span>
+          </div>
+
+          <div className="stat-item">
+            <strong>99.9%</strong>
+            <span>uptime</span>
+          </div>
+
+          <div className="stat-item">
+            <strong>84M+</strong>
+            <span>cliques rastreados</span>
+          </div>
+
+          <div className="stat-item">
+            <strong>190+</strong>
+            <span>países alcançados</span>
+          </div>
+        </section>
+
+        <section className="features" id="features">
+          <div className="section-heading">
+            <span className="section-kicker">FEITO PARA CRESCER</span>
+            <h2>
+              Mais que um link.
+              <br />
+              <span>Uma ferramenta de crescimento.</span>
+            </h2>
+          </div>
+
+          <div className="bento-grid">
+            <article className="feature-card feature-analytics" id="analytics">
+              <div className="feature-content">
+                <span className="feature-number">01</span>
+                <h3>Analytics em tempo real</h3>
+                <p>
+                  Saiba quem está clicando, de onde vem seu público e quais
+                  campanhas realmente funcionam.
+                </p>
+              </div>
+
+              <div className="analytics-preview">
+                <div className="preview-header">
+                  <span>Visão geral</span>
+                  <span>Últimos 7 dias</span>
+                </div>
+
+                <div className="preview-value">18.429</div>
+
+                <div className="preview-bars">
+                  <i style={{ height: "34%" }} />
+                  <i style={{ height: "52%" }} />
+                  <i style={{ height: "42%" }} />
+                  <i style={{ height: "68%" }} />
+                  <i style={{ height: "58%" }} />
+                  <i style={{ height: "82%" }} />
+                  <i style={{ height: "72%" }} />
+                  <i style={{ height: "96%" }} />
+                </div>
+              </div>
+            </article>
+
+            <article className="feature-card feature-branding">
+              <span className="feature-number">02</span>
+              <div className="branding-icon">↗</div>
+              <h3>Domínio personalizado</h3>
+              <p>
+                Coloque sua marca em cada link que você compartilhar.
+              </p>
+              <div className="domain-pill">
+                <span>go.</span> suamarca.com
+              </div>
+            </article>
+
+            <article className="feature-card feature-security">
+              <span className="feature-number">03</span>
+              <div className="security-visual">
+                <div className="security-ring">
+                  <span>✓</span>
+                </div>
+              </div>
+              <h3>Seguro por padrão</h3>
+              <p>
+                HTTPS, proteção contra spam e links maliciosos.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <footer className="footer">
+          <a href="#" className="brand">
+            <span className="brand-mark">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M8.5 15.5 15.5 8.5M7 12l-2 2a4 4 0 0 0 5.66 5.66l2-2M17 12l2-2a4 4 0 0 0-5.66-5.66l-2 2"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </span>
+            <span>link<span className="brand-accent">ly</span></span>
+          </a>
+
+          <span className="footer-copy">
+            © 2027 Linkly. Links que vão mais longe.
+          </span>
+
+          <div className="footer-links">
+            <a href="#">Privacidade</a>
+            <a href="#">Termos</a>
+            <a href="#">Contato</a>
+          </div>
+        </footer>
       </main>
 
-      {/* Footer */}
-      <footer className="fixed bottom-0 w-full py-12 border-t border-[#262626] bg-background dark:bg-background z-10 flex flex-col md:flex-row justify-between items-center max-w-container-max mx-auto px-4 md:px-12 opacity-80 hover:opacity-100 transition-opacity">
-        <div className="font-label-sm text-label-sm text-on-secondary-container mb-4 md:mb-0">
-          © 2024 Lynx Shortener. Precision in every pixel.
-        </div>
-        <nav className="flex gap-6">
-          <a className="font-label-sm text-label-sm text-on-secondary-container hover:text-on-surface transition-colors" href="#">Terms</a>
-          <a className="font-label-sm text-label-sm text-on-secondary-container hover:text-on-surface transition-colors" href="#">Privacy</a>
-          <a className="font-label-sm text-label-sm text-on-secondary-container hover:text-on-surface transition-colors" href="#">Status</a>
-        </nav>
-      </footer>
-    </div>
-  );
+    </>
+
+  )
 }
